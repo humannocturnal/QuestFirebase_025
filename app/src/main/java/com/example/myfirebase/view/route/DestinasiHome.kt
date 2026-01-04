@@ -1,5 +1,10 @@
 package com.example.myfirebase.view.route
 
-object DestinasiHome {
+import com.example.myfirebase.R
+import com.example.myfirebase.view.route.DestinasiNavigasi
 
+object DestinasiHome : DestinasiNavigasi {
+
+    override val route = "home"
+    override val titleRes = R.string.app_name
 }
