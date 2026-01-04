@@ -1,2 +1,46 @@
 package com.example.myfirebase.repositori
 
+import com.example.myfirebase.modeldata.Siswa
+import com.google.firebase.firestore.FirebaseFirestore
+
+interface RepositorySiswa {
+    suspend fun getDataSiswa(): List<Siswa>
+    suspend fun postDataSiswa(siswa: Siswa)
+}
+
+class FirebaseRepositorySiswa : RepositorySiswa {
+
+    private val db = FirebaseFirestore.getInstance()
+    private val collection = db.collection("siswa")
+
+    override suspend fun getDataSiswa(): List<Siswa> {
+        return try {
+            collection.get().await().documents.map { doc ->
+                Siswa(
+                    id = doc.getLong("id") ?: 0,
+                    nama = doc.getString("nama") ?: "",
+                    alamat = doc.getString("alamat") ?: "",
+                    telpon = doc.getString("telpon") ?: ""
+                )
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun postDataSiswa(siswa: Siswa) {
+        val docRef = if (siswa.id == 0L)
+            collection.document()
+        else
+            collection.document(siswa.id.toString())
+
+        val data = hashMapOf(
+            "id" to (if (siswa.id != 0L) siswa.id else docRef.id.hashCode().toLong()),
+            "nama" to siswa.nama,
+            "alamat" to siswa.alamat,
+            "telpon" to siswa.telpon
+        )
+
+        docRef.set(data).await()
+    }
+}
