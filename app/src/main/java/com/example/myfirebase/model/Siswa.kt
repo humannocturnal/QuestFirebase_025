@@ -1,4 +1,4 @@
-package com.example.myfirebase.modeldata
+package com.example.myfirebase.model
 
 data class Siswa(
     val id: Long = 0,
@@ -14,20 +14,17 @@ data class DetailSiswa(
     val telpon: String = ""
 )
 
-/* Mapper */
 fun DetailSiswa.toDataSiswa(): Siswa =
     Siswa(id, nama, alamat, telpon)
 
 fun Siswa.toDetailSiswa(): DetailSiswa =
     DetailSiswa(id, nama, alamat, telpon)
 
-/* UI State */
 data class UIStateSiswa(
     val detailSiswa: DetailSiswa = DetailSiswa(),
     val isEntryValid: Boolean = false
 )
 
-/* Convert data ke UI State */
 fun Siswa.toUIStateSiswa(
     isEntryValid: Boolean = false
 ): UIStateSiswa = UIStateSiswa(
